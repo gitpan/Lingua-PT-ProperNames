@@ -1,5 +1,9 @@
 Revision history for Lingua-PT-ProperNames
 
+0.04    Mon Nov 08 20:00 2004
+	- Moved propernames dictionary to separate file;
+	- Added instalation stuf for propernames dictionary;
+
 0.03	Fri Oct 22 16:49 2004
 	- Moved to ExtUtils::MakeMaker;
 	- Added samples directory;

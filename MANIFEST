@@ -17,3 +17,5 @@ t/01.forPN.t
 t/02.dict.t
 t/pod-coverage.t
 t/pod.t
+data/cpdata.pl
+data/names.dat
