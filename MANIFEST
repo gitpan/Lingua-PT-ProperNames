@@ -1,0 +1,11 @@
+Build.PL
+Changes
+MANIFEST
+META.yml # Will be created by "make dist"
+README
+lib/Lingua/PT/ProperNames.pm
+t/00.load.t
+t/pod-coverage.t
+t/pod.t
+t/01.forPN.t
+t/01.forPN.input

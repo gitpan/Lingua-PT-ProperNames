@@ -1,0 +1,5 @@
+Revision history for Lingua-PT-ProperNames
+
+0.01    Mon Oct  4 20:00 2004
+        - Moved Lingua::PT::PLN propername functions to this module;
+
