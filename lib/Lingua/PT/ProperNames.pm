@@ -14,7 +14,7 @@ Lingua::PT::ProperNames - Simple module to extract proper names from Portuguese 
 Version 0.04
 
 =cut
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 our @ISA = qw(Exporter);
 our @EXPORT = qw/getPN printPN printPNstring forPN forPNstring/;
 
@@ -119,7 +119,8 @@ sub _load_dictionary {
     while(<D>) {
       chomp;
       next if m!^\s*$!;
-      $self->{dic}{$_} = $_;
+      my ($nome,$prob,$type) = split /\s+/;
+      $self->{dic}{$nome} = {type=>$type,prob=>$prob};
     }
     close D;
   }
@@ -145,6 +146,30 @@ sub is_name {
   return _exists(@_)
 }
 
+=head2 is_surname
+
+Thie method checks if a name exists in the Names dictionary as a
+Surname.
+
+=cut
+
+sub is_surname {
+  return _exists(@_) && _type(@_) eq "apelido";
+}
+
+sub _type {
+  my $self = shift;
+  my $word = shift;
+  if (exists($self->{dic}{$word})) {
+    return $self->{dic}{$word}{type}
+  } elsif (exists($self->{cdic}{$word})) {
+    return $self->{cdic}{$word}{type}
+  } elsif (exists($self->{sdic}{$word})) {
+    return $self->{sdic}{$word}{type}
+  } else {
+    return undef;
+  }
+}
 
 
 =head1 Export the following functions

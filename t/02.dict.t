@@ -1,6 +1,6 @@
 # -*- cperl -*-
 
-use Test::More tests => 4;
+use Test::More tests => 6;
 
 use Lingua::PT::ProperNames;
 
@@ -14,6 +14,10 @@ isa_ok($dic, "Lingua::PT::ProperNames");
 ok($dic->_exists("Alberto"));
 ok($dic->_exists("Simões"));
 ok(!$dic->_exists("cama"));
+
+ok($dic->is_name("Maria"));
+ok($dic->is_surname("Simões"));
+
 
 # $a = 'à';
 # SKIP: {

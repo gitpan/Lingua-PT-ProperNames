@@ -1,5 +1,9 @@
 Revision history for Lingua-PT-ProperNames
 
+0.05    Sun Nov 14 19:15 2004
+	- Added a real ProperName dictionary file;
+	- Added an is_surname method;
+
 0.04    Mon Nov 08 20:00 2004
 	- Moved propernames dictionary to separate file;
 	- Added instalation stuf for propernames dictionary;

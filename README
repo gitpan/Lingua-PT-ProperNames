@@ -1,4 +1,5 @@
 Lingua-PT-ProperNames
+---------------------
 
 This module is a set of functions to detect, tag and extract proper
 names on Portuguese texts.
