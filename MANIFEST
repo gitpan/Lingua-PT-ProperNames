@@ -1,12 +1,19 @@
-Build.PL
 Changes
-MANIFEST
-META.yml # Will be created by "make dist"
-README
 lib/Lingua/PT/ProperNames.pm
+Makefile.PL
+MANIFEST
+META.yml			# Will be created by "make dist"
+README
+samples/printPN
+samples/README
+samples/refPN
+samples/sample.txt
+samples/tagPnTable
+samples/tagPnWithJspell
+samples/ucPN
 t/00.load.t
+t/01.forPN.input
+t/01.forPN.t
+t/02.dict.t
 t/pod-coverage.t
 t/pod.t
-t/01.forPN.t
-t/01.forPN.input
-t/02.dict.t

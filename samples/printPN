@@ -1,0 +1,6 @@
+#!/usr/bin/perl -s
+
+use Lingua::PT::ProperNames;
+use locale;
+
+printPN();

@@ -11,12 +11,12 @@ Lingua::PT::ProperNames - Simple module to extract proper names from Portuguese 
 
 =head1 Version
 
-Version 0.02
+Version 0.03
 
 =cut
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 our @ISA = qw(Exporter);
-our @EXPORT = qw/get print printString process forString/;
+our @EXPORT = qw/getPN printPN printPNstring forPN forPNstring/;
 
 our ($em, $np1, $np, $prof, $sep1, $sep2, %vazia, @stopw);
 
@@ -67,9 +67,22 @@ BEGIN {
 This module contains simple Perl-based functions to detect and extract
 proper names from Portuguese text.
 
-    use Lingua::PT::ProperNames;
+  use Lingua::PT::ProperNames;
 
-    my $pndict = Lingua::PT::ProperNames->new;
+
+  printPN(@options);
+  printPNstring({ %options... } ,$textstrint);
+  printPNstring([ @options... ] ,$textstrint);
+
+  forPN( sub{my ($pn, $contex)=@_;... } ) ;
+  forPN( {t=>"double"},
+         sub{my ($pn, $contex)=@_;... }, sub{...} ) ;
+
+  forPNstring(sub{my ($pn, $contex)=@_;... },
+         $textstring, regsep) ;
+
+
+  my $pndict = Lingua::PT::ProperNames->new;
 
 =head1 ProperNames dictionary
 
@@ -134,12 +147,22 @@ sub is_name {
 
 =head1 Export the following functions
 
-=head2 process
+=head2 forPN
+
+Substitutes all C<propername> by C<funref(propername)> in STDIN and sends
+output to STDOUT
+
+Opcionally you can pass C<{t => "full"}> as first parameter to obtain names
+after "."
+
+   forPN({in=> inputfile(sdtin), out => file(stdout)}, sub{...})
+   forPN({sep=>"\n", t=>"normal"}, sub{...})
+   forPN({sep=>'', t=>"double"}, sub{...}, sub{...})
 
 =cut
 
 
-sub process{
+sub forPN{
   ## opt:  in=> inputfile(sdtin), out => file(stdout)
   my %opt = (sep => "", t => "normal" );
 
@@ -196,6 +219,10 @@ sub process{
 
 =head2 forPNstring
 
+   forPNstring( $funref, "textstring" [, regSeparator] )>
+
+Substitutes all C<propername> by C<funref(propername)> in the text string.
+
 =cut
 
 sub forPNstring {
@@ -213,6 +240,8 @@ sub forPNstring {
 }
 
 =head2 printPNstring
+
+   printPNstring("oco")
 
 =cut
 
@@ -336,6 +365,15 @@ sub getPN {
 
 =head2 printPN
 
+  printPN("oco")
+
+  printPN  - extrai os nomes próprios dum texto.
+   -comp    junta certos nomes: Fermat + Pierre de Fermat = (Pierre de) Fermat
+   -prof
+   -e       "Sebastiao e Silva" "e" como pertencente a PN
+   -em      "em Famalicão" como pertencente a PN
+
+
 =cut
 
 sub printPN{
@@ -450,7 +488,7 @@ Alberto Simões, C<< <ambs@di.uminho.pt> >>
 =head1 Bugs
 
 NOTE: We know documentation for exported methods is inexistent. We are
-      working on that for very soon.
+working on that for very soon.
 
 Please report any bugs or feature requests to
 C<bug-lingua-pt-propernames@rt.cpan.org>, or through the web interface at

@@ -19,7 +19,7 @@ SKIP: {
   my $countD=0;
   my %pnlistD=();
 
-  process({in=>"t/01.forPN.input"},
+  forPN({in=>"t/01.forPN.input"},
 	sub{$pnlist{n($_[0])}++; $count++});
 
   is( $count, "322","forPN");
