@@ -9,3 +9,4 @@ t/pod-coverage.t
 t/pod.t
 t/01.forPN.t
 t/01.forPN.input
+t/02.dict.t

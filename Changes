@@ -1,5 +1,8 @@
 Revision history for Lingua-PT-ProperNames
 
+0.02    Mon Oct 11 20:45 2004
+	- Added a propernames dictionary (needs refinement);
+
 0.01    Mon Oct  4 20:00 2004
         - Moved Lingua::PT::PLN propername functions to this module;
 

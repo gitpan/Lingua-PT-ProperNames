@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Lingua-PT-ProperNames
-version: 0.01
+version: 0.02
 author: José João Almeida <jj@di.uminho.pt>
 abstract: |-
   Simple module to extract proper names from Portuguese Text
@@ -10,5 +10,5 @@ requires:
 provides:
   Lingua::PT::ProperNames:
     file: lib/Lingua/PT/ProperNames.pm
-    version: 0.01
+    version: 0.02
 generated_by: Module::Build version 0.25
