@@ -1,4 +1,4 @@
- my @pcolectiva =qw{ Direcção Administração  Comissão
+ my @pcolectiva =qw{ Direcção Administração  Comissão Conselho
  };
 
  my @metaInst = qw{ Instituto Fundação
@@ -14,6 +14,7 @@
    Padre Frei Papa Cónego Arcebispo Bispo Cardeal 
    General Almirante Comandante Capitão Brigadeiro Tenente Alferes Inspector
    Marquês Conde Dom D. Visconde Conselheiro Comendador Barão 
+   Senhor Senhora
  };
 
  my @metaLug = qw{ Lugar Largo Praça Praceta Bairro Rua R. Avenida Av. 
@@ -30,6 +31,7 @@
  my @tab=();
 
  @tab{@metaInst}   = ("instituição") x @metaInst;
+## @tab{@metaOrg}   = ("organização") x @metaOrg;
  @tab{@pcolectiva} = ("pessoa colectiva") x @pcolectiva;
  @tab{@pessoa}     = ("pessoa") x @pessoa;
  @tab{@santo}      = ("santo") x @santo;

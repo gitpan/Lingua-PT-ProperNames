@@ -2,6 +2,7 @@ package Lingua::PT::ProperNames;
 
 #require Exporter;
 use locale;
+use IO::String;
 use warnings;
 use strict;
 
@@ -11,23 +12,36 @@ Lingua::PT::ProperNames - Simple module to extract proper names from Portuguese 
 
 =head1 Version
 
-Version 0.04
+Version 0.07
 
 =cut
-our $VERSION = '0.05';
-our @ISA = qw(Exporter);
+
+our $VERSION = '0.07';
+use base 'Exporter';
 our @EXPORT = qw/getPN printPN printPNstring forPN forPNstring/;
 
 our ($em, $np1, $np, $prof, $sep1, $sep2, %vazia, @stopw);
 
 BEGIN {
 
-  $np1 = qr{(?:(?:[A-ZÉÚÓÁÂ][.])+|[sS]r[.]|[dD]r[.]|St[oa]?[.]|[A-ZÉÚÓÁÂ]\w+(?:[\'\-]\w+)*)};
+  $np1 = qr{(?:(?: [A-ZÈÉÚÓÁÂ][.])+
+               |   [sS]r[.]
+               |   [dD]r[.]
+               |   St[oa]?[.]
+               |   [A-ZÈÉÚÓÁÂ]\w+(?:[\'\-]\w+)*
+         )}x;
 
   #if ($e) {
   #$np= qr{$np1(?:\s+(?:d[eao]s?\s+|e\s+)?$np1)*};
   #} else {
-  $np= qr{$np1(?:\s+(?:d[eao]s?\s+)?$np1)*};
+  $np= qr{$np1
+          (?: \s+ (?:d[eaou]s?\s+
+                  |  d'
+                  |  de \s+ l[ae]s? \s+
+                  |  v[oa]n\s+
+                  )?
+              $np1)*
+         }x;
   #}
 
   @stopw = qw{
@@ -39,6 +53,8 @@ BEGIN {
               chama-se chamam-se subtitui resta diz salvo disse diz vamos entra entram
               aqui começou lá seu vinham passou quanto sou vi onde este então temos
               num aquele tivemos
+
+              en la pour le
              };
 
   $prof = join("|", qw{
@@ -77,6 +93,7 @@ proper names from Portuguese text.
   forPN( sub{my ($pn, $contex)=@_;... } ) ;
   forPN( {t=>"double"},
          sub{my ($pn, $contex)=@_;... }, sub{...} ) ;
+  $outstr = forPN($instr, sub{my ($pn, $contex)=@_;... }, ... ) ;
 
   forPNstring(sub{my ($pn, $contex)=@_;... },
          $textstring, regsep) ;
@@ -126,8 +143,6 @@ sub _load_dictionary {
   }
 }
 
-
-
 sub _exists {
   my $self = shift;
   my $word = shift;
@@ -176,15 +191,28 @@ sub _type {
 
 =head2 forPN
 
-Substitutes all C<propername> by C<funref(propername)> in STDIN and sends
+Substitutes all C<propername> by C<<funref->($propername,$context)>> in STDIN and sends
 output to STDOUT
 
-Opcionally you can pass C<{t => "full"}> as first parameter to obtain names
-after "."
+Usage:
 
-   forPN({in=> inputfile(sdtin), out => file(stdout)}, sub{...})
-   forPN({sep=>"\n", t=>"normal"}, sub{...})
-   forPN({sep=>'', t=>"double"}, sub{...}, sub{...})
+   forPN({options...}, sub{ propername processor...})
+
+Optionally you can define input or output files:
+
+   forPN({in=> "inputfile", out => "outputfile" }, sub{...})
+
+Optionally you can use option type :  C<<{t => "double"}>> to have special
+treatment for process names after pontuation (".", etc).
+With this options you must provide 2 functions: one for normal propernames
+and one for names after pontuation.
+
+   forPN({t=>"double"}, sub{...}, sub{...})
+
+You can also define record paragraph separator
+
+   forPN({sep=>"\n", t=>"normal"}, sub{...}) ## each line is a par.
+   forPN({sep=>""}, sub{...})                ## par. empty lines
 
 =cut
 
@@ -193,18 +221,27 @@ sub forPN{
   ## opt:  in=> inputfile(sdtin), out => file(stdout)
   my %opt = (sep => "", t => "normal" );
 
-  %opt = (%opt , %{shift(@_)}) if ref($_[0]) eq "HASH";
+  %opt = (%opt , %{shift(@_)}) if   ref($_[0]) eq "HASH";
+  my $instring = "";
+  $instring = shift(@_)        if ! ref($_[0]);
 
-  my $f=shift;
+  my ($f,$f1) = @_;
   my $m="\x01";
-  my $f1;
   my $old;
-  my $F1 ;
+  my ($F1, $F2) ;
 
-  local $/ = $opt{sep};  # input record separator=1 or more empty lines
+  die "invalid parameter to 'forPN'" unless ref($f) eq "CODE";
+
+  if ($opt{t} eq "double") {
+    die "invalid parameter ". ref($f1) unless ref($f1) eq "CODE";
+  }
+
+  local $/ = $opt{sep};  # input record separator=one or more empty lines
 
   if (defined $opt{in}) {
     open $F1, "$opt{in}" or die "cant open $opt{in}\n";
+  } elsif (defined $instring) {          ## input is a string (1st parameter)
+    $F1 = IO::String->new($instring);
   } else {
     $F1=*STDIN;
   }
@@ -212,13 +249,9 @@ sub forPN{
   if (defined $opt{out}) {
     open F, ">$opt{out}" or die "cant create $opt{out}\n";
     $old = select(F);
-  }
-
-  die "invalid parameter to 'forPN'" unless ref($f) eq "CODE";
-
-  if ($opt{t} eq "double") {
-    $f1 = shift;
-    die "invalid parameter ". ref($f1) unless ref($f1) eq "CODE";
+  } elsif (defined $instring) {          ## input is a string (1st parameter)
+    $F2 = IO::String->new();
+    $old = select($F2);
   }
 
   while (<$F1>) {
@@ -226,14 +259,22 @@ sub forPN{
     if ($opt{t} eq "double") {
 
       s{($np)}{$m($1$m)}g;
-      s{(^\s*|[-]\s+|[.!?]\s*)$m\(($np)$m\)}{
-	my ($aux1,$aux2,$aux3)= ($1,$2, &{$f1}($2,$ctx));
-	if   (defined($aux3)){$aux1 . $aux3}
-	else                 {$aux1 . _tryright($aux2)} }ge;
-      s{$m\(($np)$m\)}{   &{$f }($1,$ctx) }ge;
+      s{(^\s* 
+        | [-]\s+
+        | [.!?]\s*
+        )  $m\( ($np) $m\)
+       }{
+           my ($aux1,$aux2,$aux3)= ($1,$2, $f1->($2,$ctx));
+	   if   (defined($aux3)){$aux1 . $aux3}
+	   else                 {$aux1 . _tryright($aux2)} }xge;
+      
+      s{$m\(($np)$m\)}{  $f->($1,$ctx) }ge;
 
     } else {
-      s{(\w+\s+|[\«\»,:()'`"]\s*)($np)}{$1 . &{$f }($2,$ctx) }ge;
+      s{( \w+\s+
+        | [\«\»,:()'`"]\s*
+        )  ($np)
+       }{$1 . $f->($2,$ctx) }xge;
     }
     print;
   }
@@ -241,6 +282,8 @@ sub forPN{
   if (defined $opt{out}) {
     select $old;
     close F;
+  } elsif (defined $instring) {          ## input is a string (1st parameter)
+    return ${$F2->string_ref()};
   }
 }
 
@@ -260,7 +303,7 @@ sub forPNstring {
   my $r = '';
   for (split(/$sep/,$text)) {
     my $ctx = $_;
-    s/(\w+\s+|[\«\»,()'`i"]\s*)($np)/$1 . &{$f}($2,$ctx)/ge       ;
+    s/(\w+\s+|[\«\»,()'`i"]\s*)($np)/$1 . $f->($2,$ctx)/ge       ;
     $r .= "$_$sep";
   }
   return $r;
@@ -475,9 +518,9 @@ sub printPN{
 
 sub _tryright{
   my $a = shift;
-  return $a unless $a =~ /(\w+)/;
+  return $a unless $a =~ /(\w+)(.*)$/;
+  my ($w,$r) = ($1,$2);
   my $m = "\x01";
-  my ($w,$r) = ($1,$');
   $r =~ s{($np)}{$m($1$m)}g;
   return "$w$r";
 }

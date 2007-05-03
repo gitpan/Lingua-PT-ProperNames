@@ -1,5 +1,12 @@
 Revision history for Lingua-PT-ProperNames
 
+0.07    Thu May  3 22:24 2007
+	- upload problems
+
+0.06    Thu May  3 22:24 2007
+	- Force locale pt_PT on tests.
+        - do not use $' for speed.
+
 0.05    Sun Nov 14 19:15 2004
 	- Added a real ProperName dictionary file;
 	- Added an is_surname method;

@@ -23,10 +23,5 @@ ok($dic->is_surname("Simões"));
 # SKIP: {
 #   skip "not a good locale", 1 unless $a =~ m!^\w$!;
 
-  
 
 # }
-
-
-
-

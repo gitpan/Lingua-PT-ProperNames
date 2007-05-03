@@ -1,6 +1,10 @@
 # -*- cperl -*-
 
-use Test::More tests => 5;
+use Test::More tests => 12;
+
+use POSIX qw/locale_h/;
+setlocale(LC_CTYPE, "pt_PT");
+use locale;
 
 BEGIN {
   use_ok( 'Lingua::PT::ProperNames' );
@@ -22,10 +26,28 @@ SKIP: {
   forPN({in=>"t/01.forPN.input"},
 	sub{$pnlist{n($_[0])}++; $count++});
 
-  is( $count, "322","forPN");
-  is( $pnlist{Portugal}, "5","forPN");
-  is( $pnlist{"Pimenta Machado"}, "4","forPN");
-  is( $pnlist{"Ribeiro da Silva"}, "1","forPN");
+  is( $count, "326", "Total number of ProperNames detected");
+
+  is_count( "Portugal"         , 5);
+  is_count( "Pimenta Machado"  , 4);
+  is_count( "Ribeiro da Silva" , 1);
+  is_count( "Espanha" , 1);
+
+### franceses:
+  is_count( "Dias d'Almeida",1);
+  is_count( "Josquin des Prais",1);
+  is_count( "Cirille du Val",1);
+  is_count( "Marie de la Caaaaa",1);
+
+  my $out = forPN("Eu vi França e Espanha",
+	sub{$pnlist{n($_[0])}++; $count++;"==$_[0]==" });
+  is_count( "Espanha" , 2);
+  is("Eu vi ==França== e ==Espanha==",$out);
+
+  sub is_count {
+    my ($word, $count) = @_;
+    is($pnlist{$word}, $count, $word);
+  }
 
   sub n{
     my $a=shift;
