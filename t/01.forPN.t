@@ -1,22 +1,17 @@
 # -*- cperl -*-
 
-use Test::More tests => 12;
+use Test::More tests => 11;
 
 use POSIX qw/locale_h/;
 setlocale(LC_CTYPE, "pt_PT");
 use locale;
-
-BEGIN {
-  use_ok( 'Lingua::PT::ProperNames' );
-}
-
-use locale;
 use Data::Dumper;
+use Lingua::PT::ProperNames;
 
 $a = 'à';
 
 SKIP: {
-  skip "not a good locale", 4 unless $a =~ m!^\w$!;
+  skip "not a good locale", 11 unless $a =~ m!^\w$!;
 
   my $count=0;
   my %pnlist=();
@@ -33,7 +28,7 @@ SKIP: {
   is_count( "Ribeiro da Silva" , 1);
   is_count( "Espanha" , 1);
 
-### franceses:
+  ### franceses:
   is_count( "Dias d'Almeida",1);
   is_count( "Josquin des Prais",1);
   is_count( "Cirille du Val",1);

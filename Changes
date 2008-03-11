@@ -1,5 +1,8 @@
 Revision history for Lingua-PT-ProperNames
 
+0.08    Tue Mar 11 19:33 2008
+	- corrected skip on tests
+
 0.07    Thu May  3 22:24 2007
 	- upload problems
 
