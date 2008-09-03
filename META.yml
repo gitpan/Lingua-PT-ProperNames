@@ -1,11 +1,11 @@
 --- #YAML:1.0
 name:                Lingua-PT-ProperNames
-version:             0.08
+version:             0.09
 abstract:            Simple module to extract proper names from Portuguese Text
 license:             ~
 author:              
-    - Alberto Simões <ambs@di.uminho.pt>
-generated_by:        ExtUtils::MakeMaker version 6.43_01
+    - Alberto Simoes <ambs@di.uminho.pt>
+generated_by:        ExtUtils::MakeMaker version 6.44
 distribution_type:   module
 requires:     
     IO::String:                    0

@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME                => 'Lingua::PT::ProperNames',
-    AUTHOR              => 'Alberto Simões <ambs@di.uminho.pt>',
+    AUTHOR              => 'Alberto Simoes <ambs@di.uminho.pt>',
     VERSION_FROM        => 'lib/Lingua/PT/ProperNames.pm',
     ABSTRACT_FROM       => 'lib/Lingua/PT/ProperNames.pm',
     PL_FILES            => {},

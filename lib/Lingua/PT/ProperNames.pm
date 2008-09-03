@@ -12,11 +12,11 @@ Lingua::PT::ProperNames - Simple module to extract proper names from Portuguese 
 
 =head1 Version
 
-Version 0.08
+Version 0.09
 
 =cut
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 use base 'Exporter';
 our @EXPORT = qw/getPN printPN printPNstring forPN forPNstring/;
 
