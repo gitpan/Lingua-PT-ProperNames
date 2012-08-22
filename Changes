@@ -1,8 +1,12 @@
 Revision history for Lingua-PT-ProperNames
 
+0.10    August 22, 2012
+        - Fixed documentation encoding;
+	- Fixed documentation English;
+
 0.09    September 3, 2008
-        - Removed the tilde on my name, from Makefile.PL.
-          Was generating some weird results on VMS and Solaris.
+	- Removed the tilde on my name, from Makefile.PL.
+  	  Was generating some weird results on VMS and Solaris.
 
 0.08    Tue Mar 11 19:33 2008
 	- corrected skip on tests

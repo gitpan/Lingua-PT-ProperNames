@@ -19,3 +19,4 @@ t/pod-coverage.t
 t/pod.t
 data/cpdata.pl
 data/names.dat
+META.json                                Module JSON meta-data (added by MakeMaker)

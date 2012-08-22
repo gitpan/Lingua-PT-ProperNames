@@ -6,17 +6,19 @@ use IO::String;
 use warnings;
 use strict;
 
+=encoding ISO-8859-1
+
 =head1 NAME
 
 Lingua::PT::ProperNames - Simple module to extract proper names from Portuguese Text
 
 =head1 Version
 
-Version 0.09
+Version 0.10
 
 =cut
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 use base 'Exporter';
 our @EXPORT = qw/getPN printPN printPNstring forPN forPNstring/;
 
@@ -101,7 +103,7 @@ proper names from Portuguese text.
 
   my $pndict = Lingua::PT::ProperNames->new;
 
-=head1 ProperNames dictionary
+=head1 Functions related to ProperNames dictionary
 
 =head2 new
 
@@ -153,7 +155,7 @@ sub _exists {
 
 =head2 is_name
 
-This method checks if a name exists in the Names dictionary.
+This method checks if a name exists in the Names dictionary as a Given Name.
 
 =cut
 
@@ -187,12 +189,12 @@ sub _type {
 }
 
 
-=head1 Export the following functions
+=head1 Detecting Proper Names
 
 =head2 forPN
 
-Substitutes all C<propername> by C<<funref->($propername,$context)>> in STDIN and sends
-output to STDOUT
+Substitutes all Proper Names found on STDIN by the result of calling a function C<<f>>
+with arguments ($propername,$context). The result is sent to STDOUT.
 
 Usage:
 
@@ -202,10 +204,10 @@ Optionally you can define input or output files:
 
    forPN({in=> "inputfile", out => "outputfile" }, sub{...})
 
-Optionally you can use option type :  C<<{t => "double"}>> to have special
-treatment for process names after pontuation (".", etc).
-With this options you must provide 2 functions: one for normal propernames
-and one for names after pontuation.
+Also, C<<{t => "double"}>> helps  to treat in a special way
+names after punctuation (".", etc).
+With this options you must provide 2 functions: one for standard Proper Names
+and one for names after punctuation.
 
    forPN({t=>"double"}, sub{...}, sub{...})
 
@@ -561,9 +563,6 @@ Alberto Simões, C<< <ambs@di.uminho.pt> >>
 
 =head1 Bugs
 
-NOTE: We know documentation for exported methods is inexistent. We are
-working on that for very soon.
-
 Please report any bugs or feature requests to
 C<bug-lingua-pt-propernames@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org>.  I will be notified, and then you'll automatically
@@ -571,7 +570,7 @@ be notified of progress on your bug as I make changes.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2004 Alberto Simões, All Rights Reserved.
+Copyright 2004-2008 Projecto Natura, All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
